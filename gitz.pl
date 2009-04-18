@@ -129,6 +129,7 @@ sub list_issue {
 
 sub show_issue {
     my $id     = shift @ARGV;
+    die 'id is required' unless $id;
     my $issues = call_get_api( 'show', $id );
     my $issue  = $issues->{issue};
     return unless $issue;
@@ -138,13 +139,16 @@ sub show_issue {
 
 sub close_issue {
     my $id = shift @ARGV;
+    die 'id is required' unless $id;
     call_post_api( 'close', $id );
 }
 
 sub edit_issue {
     my $id = shift @ARGV;
+    die 'id is required' unless $id;
     die 'title is required ' unless $args{title};
     die 'body is required '  unless $args{body};
+
     call_post_api(
         'edit', 
         $id,
@@ -156,6 +160,7 @@ sub edit_issue {
 
 sub reopen_issue {
     my $id = shift @ARGV;
+    die 'id is required' unless $id;
     call_post_api( 'reopen', $id );
 }
 
