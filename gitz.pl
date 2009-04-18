@@ -21,6 +21,7 @@ our %config     = ();
 our %args       = ();
 our $CONFIG_KEY = 'developer.github.com';
 our $API_BASE   = "http://github.com/api/v2/json/issues";
+our $project;
 
 $ua->env_proxy;
 
@@ -30,6 +31,7 @@ sub main {
     setup_encoding();
     setup_config();
     setup_options();
+    setup_project_name();
     my $commands = setup_commands();
     my $command = shift @ARGV || "todo";
     dispatch_command( $commands, $command );
@@ -63,7 +65,12 @@ sub setup_options {
     GetOptions( \%args, "title=s", "body=s", "help", "project=s" )
         or pod2usage(2);
     pod2usage(0) if $args{help};
-    die 'project name is required' unless $args{project};
+}
+
+sub setup_project_name {
+    $project = $args{project} || $ENV{GITZ_PROJECT};
+    die 'project name is required' unless $project;
+    $project;
 }
 
 sub setup_commands {
@@ -112,7 +119,6 @@ sub _api_url {
     my $config    = pit_get($CONFIG_KEY);
     my $username  = $config->{username};
     my $api_token = $config->{api_token};
-    my $project   = $args{project};
     my $api_url   = "${API_BASE}/${method}/${username}/${project}/${param}";
     $api_url;
 }
@@ -183,14 +189,17 @@ gitz.pl - a command-line interface to github issues
 
 =head1 SYNOPSIS
 
-  gitz.pl todo --project angelos
-  gitz.pl close --project angelos
-  gitz.pl add --title XXX --body YYY --project angelos
-  gitz.pl edit 1 --title XXX --body YYY --project angelos
-  gitz.pl show 1 --project angelos
-  gitz.pl close 1 --project angelos
-  gitz.pl reopen 1 --project angelos
+    gitz.pl todo --project angelos
+    gitz.pl close --project angelos
+    gitz.pl add --title XXX --body YYY --project angelos
+    gitz.pl edit 1 --title XXX --body YYY --project angelos
+    gitz.pl show 1 --project angelos
+    gitz.pl close 1 --project angelos
+    gitz.pl reopen 1 --project angelos
+
+  you can set project name with enviornment variable like below:
+
+    export GITZ_PROJECT=angelos
 
 =cut
-
 
