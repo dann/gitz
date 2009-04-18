@@ -190,7 +190,6 @@ gitz.pl - a command-line interface to github issues
 =head1 SYNOPSIS
 
     gitz.pl todo --project angelos
-    gitz.pl close --project angelos
     gitz.pl add --title XXX --body YYY --project angelos
     gitz.pl edit 1 --title XXX --body YYY --project angelos
     gitz.pl show 1 --project angelos
